@@ -3,6 +3,7 @@ package com.bisecthosting.mcordlink;
 import com.bisecthosting.mcordlink.discord.DiscordLauncher;
 import com.bisecthosting.mcordlink.discord.MessageListener;
 
+import com.bisecthosting.mcordlink.listeners.JoinListener;
 import com.marcusslover.plus.lib.text.Text;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,13 +20,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
     private DiscordLauncher discordLauncher = new DiscordLauncher();
     private MessageListener messageListener = new MessageListener(this);
 
-    static int generate_code() {
-        int code = (int) Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
-        // Do some kinda check here to see if the code already exists for a different player, if it does then generate
-        // another.
-        // Jake can you do the thing where we store codes alongside mc usernames + discord user IDs pls
-        return code;
-    }
+
 
     @Override
     public void onEnable() {
@@ -35,6 +30,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
         logger.log(Level.INFO, "Loading MCordLink...");
 
         getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new JoinListener, this);
         logger.log(Level.INFO, "Registered Events");
 
         this.discordLauncher.init();
@@ -59,16 +55,4 @@ public final class MCordLink extends JavaPlugin implements Listener {
         logger.log(Level.INFO, "Plugin has unloaded.");
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        int code = generate_code();
-        player.sendMessage(
-                ChatColor.YELLOW + "Your code is " + ChatColor.GREEN + ChatColor.UNDERLINE
-                        + code + ChatColor.RESET + ChatColor.YELLOW + ". Please send this code to " +
-                        ChatColor.RED + "BisectStudios Verification#1234!"
-
-        );
-        Text.of("&7 Coc").send(player);
-    }
 }
