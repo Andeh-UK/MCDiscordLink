@@ -19,8 +19,6 @@ public final class MCordLink extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
-
         Logger logger = this.getLogger();
         logger.log(Level.INFO, "Loading MCordLink...");
 
@@ -44,8 +42,6 @@ public final class MCordLink extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
-
         Logger logger = this.getLogger();
         logger.log(Level.INFO, "Plugin has unloaded.");
     }
