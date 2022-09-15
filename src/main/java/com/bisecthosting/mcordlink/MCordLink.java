@@ -3,6 +3,7 @@ package com.bisecthosting.mcordlink;
 import com.bisecthosting.mcordlink.discord.DiscordLauncher;
 import com.bisecthosting.mcordlink.discord.MessageListener;
 
+import com.marcusslover.plus.lib.text.Text;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,9 +38,9 @@ public final class MCordLink extends JavaPlugin implements Listener {
         logger.log(Level.INFO, "Registered Events");
 
         this.discordLauncher.init();
-        logger.log(Level.INFO, "Launching Discord Bot...");
-        this.messageListener.init();
-        logger.log(Level.INFO, "Registering Message Event Listener.");
+
+        // this.messageListener.init();
+        // logger.log(Level.INFO, "Registering Message Event Listener.");
     }
 
     public static MCordLink getInstance() {
@@ -68,6 +69,6 @@ public final class MCordLink extends JavaPlugin implements Listener {
                         ChatColor.RED + "BisectStudios Verification#1234!"
 
         );
-
+        Text.of("&7 Coc").send(player);
     }
 }
