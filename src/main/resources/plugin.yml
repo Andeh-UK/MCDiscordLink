@@ -1,0 +1,8 @@
+name: MCordLink
+version: '${project.version}'
+main: com.bisecthosting.mcordlink.MCordLink
+api-version: 1.18
+prefix: MCordLink
+authors: [ ExHiraku ]
+description: A 1.18.2 PaperMC Plugin that adds connectivity between your Minecraft and Discord Servers.
+website: https://bisecthosting.com
