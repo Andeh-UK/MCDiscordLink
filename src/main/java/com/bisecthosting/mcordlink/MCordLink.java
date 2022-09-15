@@ -68,5 +68,6 @@ public final class MCordLink extends JavaPlugin implements Listener {
                         ChatColor.RED + "BisectStudios Verification#1234!"
 
         );
+
     }
 }
