@@ -4,12 +4,7 @@ import com.bisecthosting.mcordlink.discord.DiscordLauncher;
 import com.bisecthosting.mcordlink.discord.MessageListener;
 
 import com.bisecthosting.mcordlink.listeners.JoinListener;
-import com.marcusslover.plus.lib.text.Text;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -30,7 +25,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
         logger.log(Level.INFO, "Loading MCordLink...");
 
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(new JoinListener, this);
+        getServer().getPluginManager().registerEvents(new JoinListener(), this);
         logger.log(Level.INFO, "Registered Events");
 
         this.discordLauncher.init();
