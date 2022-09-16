@@ -49,8 +49,9 @@ public final class MCordLink extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        this.discordLauncher.getJDA().shutdown();
         Logger logger = this.getLogger();
+        logger.log(Level.INFO, "Shut Down Discord Bot.");
         logger.log(Level.INFO, "Plugin has unloaded.");
     }
-
 }

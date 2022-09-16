@@ -55,9 +55,6 @@ public class JoinListener implements Listener {
             if (discord_id == null) {
                 this.send_code(player, code);
             } else {
-                if(name.equals("ExHiraku")) {
-                    player.sendMessage("Fuck you");
-                }
                 player.sendMessage("Welcome Back, " + name + "!");
             }
         }

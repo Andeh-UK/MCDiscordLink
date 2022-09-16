@@ -5,11 +5,15 @@ import com.bisecthosting.mcordlink.yaml.YamlCreation;
 import com.bisecthosting.mcordlink.database.DBConnection;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.bukkit.entity.Player;
 
 import java.util.Map;
 
@@ -58,20 +62,31 @@ public class MessageListener extends ListenerAdapter {
 
         if(event.getChannel().equals(this.getChannel())) {
             if (msg.length() != 4) {
-            event.getMessage().delete().queue();
+                event.getMessage().delete().queue();
+                return;
             }
 
             try {
                 Integer.parseInt(msg);
             } catch (NumberFormatException e) {
                 event.getMessage().delete().queue();
+                return;
             }
             Map<String, String> player_data = this.dbConnection.getPlayerByCode(msg);
-            if (player_data.get("minecraft_name") == null) {
+            String minecraft_name = player_data.get("minecraft_name");
+            if (minecraft_name == null) {
                 event.getMessage().addReaction(Emoji.fromUnicode(this.unicodeWarn)).queue();
             } else {
-                //add discord role to user then do db entry adding their discord user ID to the row that the inputted
-                // code is in.
+                String role_id = this.yamlCreation.getRoleID();
+                Guild guild = event.getGuild();
+                Role role = guild.getRoleById(role_id);
+                guild.addRoleToMember(user, role).queue();
+                this.dbConnection.attachDiscord(msg, event.getAuthor().getId());
+                event.getMessage().addReaction(Emoji.fromUnicode(this.unicodeYes)).queue();
+                Player player = this.plugin.getServer().getPlayer(minecraft_name);
+                assert player != null;
+                player.sendMessage(
+                        "Successfully Connected to Discord User " + user.getName() + "#" + user.getDiscriminator());
             }
         }
     }

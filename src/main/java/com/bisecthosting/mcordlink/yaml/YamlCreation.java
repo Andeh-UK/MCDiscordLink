@@ -7,7 +7,6 @@ import java.util.logging.Level;
 
 
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import com.bisecthosting.mcordlink.MCordLink;
 
@@ -57,6 +56,11 @@ public class YamlCreation {
         return config.getString("BOT_TOKEN");
     }
 
+    public String getRoleID() {
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(this.file);
+        return config.getString("ROLE_ID");
+    }
+
     private YamlConfiguration makeDefaultConfiguration() {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(this.file);
 
@@ -67,6 +71,7 @@ public class YamlCreation {
 
         config.set("BOT_TOKEN", "");
         config.set("CHANNEL_ID", "");
+        config.set("ROLE_ID", "");
         config.set("DB_HOST", "");
         config.set("DB_NAME", "");
         config.set("DB_USERNAME", "");

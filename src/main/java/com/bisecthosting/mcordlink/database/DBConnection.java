@@ -114,4 +114,19 @@ public class DBConnection {
         player_details.put("minecraft_name", minecraft_name);
         return player_details;
     }
+
+    public void attachDiscord(String code, String user_id) {
+        Connection connection = this.createConnection();
+        if (connection != null) {
+            try {
+                String query = "UPDATE players SET discord_id=? WHERE code=?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setString(1, user_id);
+                statement.setString(2, code);
+                statement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
