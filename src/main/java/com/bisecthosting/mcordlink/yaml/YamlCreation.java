@@ -3,6 +3,7 @@ package com.bisecthosting.mcordlink.yaml;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 
 import org.bukkit.ChatColor;
@@ -27,8 +28,8 @@ public class YamlCreation {
         if(!this.file.exists()) {
             try {
                 this.file.createNewFile();
-
-                // make default config go here
+                this.makeDefaultConfiguration().save(this.file);
+                this.plugin.getLogger().log(Level.INFO, "Created Default Config");
             } catch (IOException e) {
                 this.plugin.getLogger().info(ChatColor.RED + "" + ChatColor.BOLD + "[ERROR]" + ChatColor.WHITE
                         + "Unable to create config file.");
@@ -38,25 +39,39 @@ public class YamlCreation {
 
     public String getChannelID() {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(this.file);
-        return config.getString("Channel ID");
+        return config.getString("CHANNEL_ID");
+    }
+
+    public String getDatabaseURI() {
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(this.file);
+        String host = config.getString("DB_HOST");
+        String name = config.getString("DB_NAME");
+        String username = config.getString("DB_USERNAME");
+        String password = config.getString("DB_PASSWORD");
+        System.out.println("host: " + host + " name: " + name + " username: " + username + " password: " + password);
+        return "jdbc:mysql://" + host + "/" + name + "?user=" + username + "&password=" + password;
+    }
+
+    public String getBotToken() {
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(this.file);
+        return config.getString("BOT_TOKEN");
     }
 
     private YamlConfiguration makeDefaultConfiguration() {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(this.file);
 
-        FileConfiguration configFile = YamlConfiguration.loadConfiguration(this.file);
-        configFile.setComments("MCL", Arrays.asList("Welcome to the MCordLink Configuration.", "", "",
+        config.setComments("DC", Arrays.asList("Welcome to the MCordLink Configuration.", "", "",
         "Made by BH | Hiraku#2623. For any issues of any bugs, please contact him on discord @ " +
                 "https://discord.com/users/1012482462586241134", "To begin with, enter your " +
-                "Discord Text Channel ID below.", "", "", "For example: \"Channel ID\": \"983464907204882435\""));
+                "Discord Bot Token, Channel ID and MySQL URI below."));
 
-        try {
-            configFile.save(this.file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        config.set("BOT_TOKEN", "");
+        config.set("CHANNEL_ID", "");
+        config.set("DB_HOST", "");
+        config.set("DB_NAME", "");
+        config.set("DB_USERNAME", "");
+        config.set("DB_PASSWORD", "");
 
-        config.set("Channel ID", "");
 
         return config;
     }
