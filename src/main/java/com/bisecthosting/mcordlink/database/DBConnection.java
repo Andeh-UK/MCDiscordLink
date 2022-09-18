@@ -40,7 +40,7 @@ public class DBConnection {
                 String query = "CREATE TABLE IF NOT EXISTS players(" +
                         "code VARCHAR(4) NOT NULL PRIMARY KEY," +
                         "minecraft_name VARCHAR(64) NOT NULL UNIQUE, " +
-                        "discord_id VARCHAR(18) UNIQUE)";
+                        "discord_id VARCHAR(20) UNIQUE)";
                 statement.execute(query);
                 statement.close();
                 connection.close();
