@@ -1,5 +1,6 @@
 package com.bisecthosting.mcordlink;
 
+import com.bisecthosting.mcordlink.commands.RemovePlayer;
 import com.bisecthosting.mcordlink.discord.DiscordLauncher;
 import com.bisecthosting.mcordlink.discord.MessageListener;
 
@@ -14,6 +15,7 @@ import java.util.logging.Logger;
 
 public final class MCordLink extends JavaPlugin implements Listener {
 
+    private static MCordLink plugin;
     private DiscordLauncher discordLauncher = new DiscordLauncher();
     private YamlCreation yamlCreation = new YamlCreation(this);
     private DBConnection dbConnection = new DBConnection();
@@ -31,11 +33,14 @@ public final class MCordLink extends JavaPlugin implements Listener {
         dbConnection.createTables();
 
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(new JoinListener(this.dbConnection), this);
+        getServer().getPluginManager().registerEvents(
+                new JoinListener(this.dbConnection, this.yamlCreation), this);
         logger.log(Level.INFO, "Registered Events");
+        getCommand("removeplayer").setExecutor(new RemovePlayer());
 
         this.discordLauncher.init(this.yamlCreation.getBotToken());
         this.messageListener.init();
+        plugin = this;
         logger.log(Level.INFO, "Registering Message Event Listener.");
     }
 
@@ -54,4 +59,18 @@ public final class MCordLink extends JavaPlugin implements Listener {
         logger.log(Level.INFO, "Shut Down Discord Bot.");
         logger.log(Level.INFO, "Plugin has unloaded.");
     }
+
+    public static MCordLink getPlugin() {
+        return plugin;
+    }
+
+    public static YamlCreation getYaml() {
+        return plugin.yamlCreation;
+    }
+
+    public static DBConnection getConnection() {
+        return plugin.dbConnection;
+    }
+
+
 }

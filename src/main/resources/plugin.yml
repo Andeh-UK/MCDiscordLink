@@ -8,3 +8,9 @@ description: A 1.18.2 PaperMC Plugin that adds connectivity between your Minecra
 website: https://bisecthosting.com
 depend:
   - Plus
+commands:
+  removeplayer:
+    description: Remove a player from the Database.
+    usage: /<command> <player>
+    aliases:
+      - dbban

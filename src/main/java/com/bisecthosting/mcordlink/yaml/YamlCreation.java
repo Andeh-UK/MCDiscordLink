@@ -47,7 +47,6 @@ public class YamlCreation {
         String name = config.getString("DB_NAME");
         String username = config.getString("DB_USERNAME");
         String password = config.getString("DB_PASSWORD");
-        System.out.println("host: " + host + " name: " + name + " username: " + username + " password: " + password);
         return "jdbc:mysql://" + host + "/" + name + "?user=" + username + "&password=" + password;
     }
 
@@ -61,6 +60,11 @@ public class YamlCreation {
         return config.getString("ROLE_ID");
     }
 
+    public String getHubNumber() {
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(this.file);
+        return config.getString("HUB_NUMBER");
+    }
+
     private YamlConfiguration makeDefaultConfiguration() {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(this.file);
 
@@ -69,6 +73,7 @@ public class YamlCreation {
                 "https://discord.com/users/1012482462586241134", "To begin with, enter your " +
                 "Discord Bot Token, Channel ID and MySQL URI below."));
 
+        config.set("HUB_NUMBER", "0");
         config.set("BOT_TOKEN", "");
         config.set("CHANNEL_ID", "");
         config.set("ROLE_ID", "");
@@ -76,7 +81,6 @@ public class YamlCreation {
         config.set("DB_NAME", "");
         config.set("DB_USERNAME", "");
         config.set("DB_PASSWORD", "");
-
 
         return config;
     }

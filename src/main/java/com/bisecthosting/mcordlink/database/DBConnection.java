@@ -13,7 +13,6 @@ public class DBConnection {
     private String uri = null;
 
     public void init(Logger logger, String uri) {
-        System.out.println(uri);
         this.logger = logger;
         this.uri = uri;
     }
@@ -38,7 +37,7 @@ public class DBConnection {
             try {
                 Statement statement = connection.createStatement();
                 String query = "CREATE TABLE IF NOT EXISTS players(" +
-                        "code VARCHAR(4) NOT NULL PRIMARY KEY," +
+                        "code VARCHAR(5) NOT NULL PRIMARY KEY," +
                         "minecraft_name VARCHAR(64) NOT NULL UNIQUE, " +
                         "discord_id VARCHAR(20) UNIQUE)";
                 statement.execute(query);
@@ -123,6 +122,35 @@ public class DBConnection {
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setString(1, user_id);
                 statement.setString(2, code);
+                statement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updateCode(String code, String minecraft_name) {
+        Connection connection = this.createConnection();
+        if (connection != null) {
+            try {
+                String query = "UPDATE players SET code=? WHERE minecraft_name=?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setString(1, code);
+                statement.setString(2, minecraft_name);
+                statement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void removePlayer(String minecraft_name) {
+        Connection connection = this.createConnection();
+        if (connection != null) {
+            try {
+                String query = "DELETE FROM players WHERE minecraft_name=?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setString(1, minecraft_name);
                 statement.execute();
             } catch (SQLException e) {
                 e.printStackTrace();
