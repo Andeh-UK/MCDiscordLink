@@ -11,10 +11,13 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 public class MessageListener extends ListenerAdapter {
 
@@ -26,8 +29,8 @@ public class MessageListener extends ListenerAdapter {
     private String unicodeWarn = "\u26A0";
     private String unicodeYes = "\u2714";
 
-    public MessageListener(MCordLink main, YamlCreation yaml, DBConnection dbConnection) {
-        this.plugin = main;
+    public MessageListener(MCordLink plugin, YamlCreation yaml, DBConnection dbConnection) {
+        this.plugin = plugin;
         this.yamlCreation = yaml;
         this.dbConnection = dbConnection;
     }
@@ -98,8 +101,21 @@ public class MessageListener extends ListenerAdapter {
                 }
                 Player player = this.plugin.getServer().getPlayer(minecraft_name);
                 assert player != null;
-                player.sendMessage(
-                        "Successfully Connected to Discord User " + user.getName() + "#" + user.getDiscriminator());
+                player.sendMessage("Successfully Connected to Discord User " + user.getName() + "#" + user.getDiscriminator());
+//                QueueFunction.addQueue(player);
+                try {
+                    boolean success = Bukkit.getScheduler().callSyncMethod( plugin, new Callable<Boolean>() {
+                        @Override
+                        public Boolean call() {
+                            return Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ajqueue:joinq "+player.getName()+" game");
+                        }
+                    } ).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
             }
         }
     }
