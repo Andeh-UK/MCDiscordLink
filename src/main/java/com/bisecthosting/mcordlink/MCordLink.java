@@ -1,5 +1,6 @@
 package com.bisecthosting.mcordlink;
 
+import com.bisecthosting.mcordlink.commands.ClearDatabase;
 import com.bisecthosting.mcordlink.commands.RemovePlayer;
 import com.bisecthosting.mcordlink.discord.DiscordLauncher;
 import com.bisecthosting.mcordlink.discord.MessageListener;
@@ -37,6 +38,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
                 new JoinListener(this.dbConnection, this.yamlCreation), this);
         logger.log(Level.INFO, "Registered Events");
         getCommand("removeplayer").setExecutor(new RemovePlayer());
+        getCommand("cleardatabase").setExecutor(new ClearDatabase());
 
         this.discordLauncher.init(this.yamlCreation.getBotToken());
         this.messageListener.init();

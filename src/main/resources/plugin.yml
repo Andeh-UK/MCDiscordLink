@@ -14,3 +14,9 @@ commands:
     usage: /<command> <player>
     aliases:
       - dbban
+  cleardatabase:
+    description: Clear the entire Database.
+    usage: /<command>
+    aliases:
+      - cleardb
+      - dbclear

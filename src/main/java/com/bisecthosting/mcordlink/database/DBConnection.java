@@ -157,4 +157,17 @@ public class DBConnection {
             }
         }
     }
+
+    public void clearDatabase() {
+        Connection connection = this.createConnection();
+        if (connection != null) {
+            try {
+                String query = "DELETE FROM players";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

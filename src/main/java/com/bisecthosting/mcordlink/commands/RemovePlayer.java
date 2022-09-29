@@ -5,9 +5,7 @@ import com.bisecthosting.mcordlink.MCordLink;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -21,14 +19,29 @@ public class RemovePlayer implements CommandExecutor {
             return false;
         }
 
-        String targetName = args[0];
+        boolean isPermitted = false;
 
-        Map<String, String> player_data = MCordLink.getPlugin().getConnection().getPlayer(targetName);
-        if (player_data == null) {
-            sender.sendMessage("Player with tag " + targetName + " is not currently registered on the database.");
+        if (sender instanceof Player) {
+            if(sender.hasPermission("mcordlink.removeplayer")) {
+                isPermitted = true;
+            }
         } else {
-            MCordLink.getPlugin().getConnection().removePlayer(targetName);
-            sender.sendMessage("Successfully removed player " + targetName + " from the database.");
+            isPermitted = true;
+        }
+
+        if (isPermitted) {
+            String targetName = args[0];
+
+            Map<String, String> player_data = MCordLink.getPlugin().getConnection().getPlayer(targetName);
+            if (player_data == null) {
+                sender.sendMessage("Player with tag " + targetName + " is not currently registered on the database.");
+            } else {
+                MCordLink.getPlugin().getConnection().removePlayer(targetName);
+                sender.sendMessage("Successfully removed player " + targetName + " from the database.");
+            }
+            return true;
+        } else {
+            sender.sendMessage("You do not have permissions to run this command.");
         }
         return true;
     }
