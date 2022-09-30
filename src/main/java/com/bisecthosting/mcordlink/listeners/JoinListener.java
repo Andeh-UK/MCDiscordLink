@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class JoinListener implements Listener {
 
-    private DBConnection dbConnection = null;
+    public DBConnection dbConnection = null;
     private YamlCreation yamlCreation = null;
 
     public JoinListener(DBConnection dbConnection, YamlCreation yamlCreation) {

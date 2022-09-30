@@ -7,6 +7,7 @@ import com.bisecthosting.mcordlink.discord.MessageListener;
 
 import com.bisecthosting.mcordlink.database.DBConnection;
 import com.bisecthosting.mcordlink.listeners.JoinListener;
+import com.bisecthosting.mcordlink.listeners.Message;
 import com.bisecthosting.mcordlink.yaml.YamlCreation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,6 +16,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,11 +25,11 @@ public final class MCordLink extends JavaPlugin implements Listener {
 
     private static MCordLink plugin;
     public static BossBar prompt;
+    private static Message msg;
     private DiscordLauncher discordLauncher = new DiscordLauncher();
     private YamlCreation yamlCreation = new YamlCreation(this);
     private DBConnection dbConnection = new DBConnection();
     private MessageListener messageListener = new MessageListener(this, this.yamlCreation, this.dbConnection);
-
 
 
 
@@ -42,6 +44,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
         this.yamlCreation.init();
         dbConnection.init(logger, this.yamlCreation.getDatabaseURI());
         dbConnection.createTables();
+        msg = new Message(dbConnection);
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(
@@ -54,6 +57,8 @@ public final class MCordLink extends JavaPlugin implements Listener {
         this.messageListener.init();
         plugin = this;
         logger.log(Level.INFO, "Registering Message Event Listener.");
+
+        init();
     }
 
     public static MCordLink getInstance() {
@@ -82,6 +87,15 @@ public final class MCordLink extends JavaPlugin implements Listener {
 
     public static DBConnection getConnection() {
         return plugin.dbConnection;
+    }
+
+    public static void init() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                msg.everyMinute();
+            }
+        }.runTaskTimer(MCordLink.getPlugin(MCordLink.class), 0L, 200L);
     }
 
 
