@@ -98,7 +98,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
             public void run() {
                 msg.everyMinute();
             }
-        }.runTaskTimer(MCordLink.getPlugin(MCordLink.class), 0L, 200L);
+        }.runTaskTimer(MCordLink.getPlugin(MCordLink.class), 0L, 1200L);
     }
 
 
