@@ -37,7 +37,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(
                 new JoinListener(this.dbConnection, this.yamlCreation), this);
         logger.log(Level.INFO, "Registered Events");
-        getCommand("removeplayer").setExecutor(new RemovePlayer());
+        getCommand("removeplayer").setExecutor(new RemovePlayer(this));
         getCommand("cleardatabase").setExecutor(new ClearDatabase());
 
         this.discordLauncher.init(this.yamlCreation.getBotToken());

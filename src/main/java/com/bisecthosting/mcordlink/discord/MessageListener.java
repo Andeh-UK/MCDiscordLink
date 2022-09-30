@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Map;
@@ -103,18 +104,19 @@ public class MessageListener extends ListenerAdapter {
                 assert player != null;
                 player.sendMessage("Successfully Connected to Discord User " + user.getName() + "#" + user.getDiscriminator());
 //                QueueFunction.addQueue(player);
-                try {
-                    boolean success = Bukkit.getScheduler().callSyncMethod( plugin, new Callable<Boolean>() {
-                        @Override
-                        public Boolean call() {
-                            return Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ajqueue:joinq "+player.getName()+" game");
-                        }
-                    } ).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                Bukkit.getScheduler().runTask(plugin, new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set ajqueue.queue.game");
+                    }
+                });
+
+                Bukkit.getScheduler().runTask(plugin, new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ajqueue:joinq " + player.getName() + " game");
+                    }
+                });
 
             }
         }

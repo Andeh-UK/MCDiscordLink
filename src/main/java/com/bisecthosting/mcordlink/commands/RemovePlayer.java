@@ -2,6 +2,8 @@ package com.bisecthosting.mcordlink.commands;
 
 import com.bisecthosting.mcordlink.MCordLink;
 
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,7 +11,14 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
+
 public class RemovePlayer implements CommandExecutor {
+
+    private MCordLink plugin;
+
+    public RemovePlayer(MCordLink plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -38,6 +47,7 @@ public class RemovePlayer implements CommandExecutor {
             } else {
                 MCordLink.getPlugin().getConnection().removePlayer(targetName);
                 sender.sendMessage("Successfully removed player " + targetName + " from the database.");
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user "+targetName+" permission unset ajqueue.queue.game");
             }
             return true;
         } else {
