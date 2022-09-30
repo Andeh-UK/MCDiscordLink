@@ -1,6 +1,8 @@
 package com.bisecthosting.mcordlink.database;
 
 
+import com.bisecthosting.mcordlink.MCordLink;
+
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,10 +13,12 @@ public class DBConnection {
 
     private Logger logger = null;
     private String uri = null;
+    private MCordLink plugin = null;
 
-    public void init(Logger logger, String uri) {
+    public void init(Logger logger, String uri, MCordLink plugin) {
         this.logger = logger;
         this.uri = uri;
+        this.plugin = plugin;
     }
 
     public Connection createConnection() {
@@ -32,7 +36,7 @@ public class DBConnection {
     }
 
     public void createTables() {
-        Connection connection = this.createConnection();
+        Connection connection = this.plugin.connection;
         if (connection != null) {
             try {
                 Statement statement = connection.createStatement();
@@ -51,7 +55,7 @@ public class DBConnection {
     }
 
     public void addPlayer(String code, String minecraft_name) {
-        Connection connection = this.createConnection();
+        Connection connection = this.plugin.connection;
         if (connection != null) {
             try {
                 String query = "INSERT INTO players (code, minecraft_name) VALUES (?, ?)";
@@ -67,7 +71,7 @@ public class DBConnection {
     }
 
     public Map<String, String> getPlayer(String minecraft_name) {
-        Connection connection = this.createConnection();
+        Connection connection = this.plugin.connection;
         String code = null;
         String discord_id = null;
         if (connection != null) {
@@ -92,7 +96,7 @@ public class DBConnection {
     }
 
     public Map<String, String> getPlayerByCode(String code) {
-        Connection connection = this.createConnection();
+        Connection connection = this.plugin.connection;
         String minecraft_name = null;
         if (connection != null) {
             try {
@@ -115,7 +119,7 @@ public class DBConnection {
     }
 
     public void attachDiscord(String code, String user_id) {
-        Connection connection = this.createConnection();
+        Connection connection = this.plugin.connection;
         if (connection != null) {
             try {
                 String query = "UPDATE players SET discord_id=? WHERE code=?";
@@ -130,7 +134,7 @@ public class DBConnection {
     }
 
     public void updateCode(String code, String minecraft_name) {
-        Connection connection = this.createConnection();
+        Connection connection = this.plugin.connection;
         if (connection != null) {
             try {
                 String query = "UPDATE players SET code=? WHERE minecraft_name=?";
@@ -145,7 +149,7 @@ public class DBConnection {
     }
 
     public void removePlayer(String minecraft_name) {
-        Connection connection = this.createConnection();
+        Connection connection = this.plugin.connection;
         if (connection != null) {
             try {
                 String query = "DELETE FROM players WHERE minecraft_name=?";
@@ -159,7 +163,7 @@ public class DBConnection {
     }
 
     public void clearDatabase() {
-        Connection connection = this.createConnection();
+        Connection connection = this.plugin.connection;
         if (connection != null) {
             try {
                 String query = "DELETE FROM players";

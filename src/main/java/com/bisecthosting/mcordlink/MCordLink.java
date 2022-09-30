@@ -11,6 +11,7 @@ import com.bisecthosting.mcordlink.yaml.YamlCreation;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +22,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
     private YamlCreation yamlCreation = new YamlCreation(this);
     private DBConnection dbConnection = new DBConnection();
     private MessageListener messageListener = new MessageListener(this, this.yamlCreation, this.dbConnection);
+    public Connection connection = null;
 
 
 
@@ -30,8 +32,9 @@ public final class MCordLink extends JavaPlugin implements Listener {
         logger.log(Level.INFO, "Loading MCordLink...");
 
         this.yamlCreation.init();
-        dbConnection.init(logger, this.yamlCreation.getDatabaseURI());
+        dbConnection.init(logger, this.yamlCreation.getDatabaseURI(), this);
         dbConnection.createTables();
+        this.connection = dbConnection.createConnection();
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(
