@@ -8,6 +8,11 @@ import com.bisecthosting.mcordlink.discord.MessageListener;
 import com.bisecthosting.mcordlink.database.DBConnection;
 import com.bisecthosting.mcordlink.listeners.JoinListener;
 import com.bisecthosting.mcordlink.yaml.YamlCreation;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,6 +22,7 @@ import java.util.logging.Logger;
 public final class MCordLink extends JavaPlugin implements Listener {
 
     private static MCordLink plugin;
+    public static BossBar prompt;
     private DiscordLauncher discordLauncher = new DiscordLauncher();
     private YamlCreation yamlCreation = new YamlCreation(this);
     private DBConnection dbConnection = new DBConnection();
@@ -24,8 +30,12 @@ public final class MCordLink extends JavaPlugin implements Listener {
 
 
 
+
+
     @Override
     public void onEnable() {
+        prompt = Bukkit.createBossBar(ChatColor.YELLOW+"Please send the code "+ChatColor.GREEN+ChatColor.BOLD+"in chat"+ChatColor.YELLOW+" to the "+ChatColor.GREEN+"#link "+ChatColor.YELLOW+"chat.", BarColor.GREEN, BarStyle.SOLID);
+
         Logger logger = this.getLogger();
         logger.log(Level.INFO, "Loading MCordLink...");
 

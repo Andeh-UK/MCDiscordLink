@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -103,8 +104,9 @@ public class MessageListener extends ListenerAdapter {
                 }
                 Player player = this.plugin.getServer().getPlayer(minecraft_name);
                 assert player != null;
-                player.sendMessage("Successfully Connected to Discord User " + user.getName() + "#" + user.getDiscriminator());
+                player.sendMessage(ChatColor.AQUA+"Connected to Discord User "+ChatColor.YELLOW+ user.getName() + "#" + user.getDiscriminator());
 //                QueueFunction.addQueue(player);
+                MCordLink.prompt.removePlayer(player);
                 try {
                     boolean success = Bukkit.getScheduler().callSyncMethod( plugin, new Callable<Boolean>() {
                         @Override
