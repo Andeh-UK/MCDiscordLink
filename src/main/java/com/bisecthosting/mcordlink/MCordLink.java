@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +30,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
     private DiscordLauncher discordLauncher = new DiscordLauncher();
     private YamlCreation yamlCreation = new YamlCreation(this);
     private DBConnection dbConnection = new DBConnection();
+    public Connection connection = null;
     private MessageListener messageListener = new MessageListener(this, this.yamlCreation, this.dbConnection);
 
 
@@ -42,8 +44,9 @@ public final class MCordLink extends JavaPlugin implements Listener {
         logger.log(Level.INFO, "Loading MCordLink...");
 
         this.yamlCreation.init();
-        dbConnection.init(logger, this.yamlCreation.getDatabaseURI());
+        dbConnection.init(logger, this.yamlCreation.getDatabaseURI(), this);
         dbConnection.createTables();
+        this.connection = dbConnection.createConnection();
         msg = new Message(dbConnection);
 
         getServer().getPluginManager().registerEvents(this, this);
