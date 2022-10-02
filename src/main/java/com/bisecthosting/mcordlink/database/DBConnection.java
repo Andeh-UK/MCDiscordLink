@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons
 
 public class DBConnection {
 
@@ -26,7 +27,7 @@ public class DBConnection {
         if (this.uri != null) {
             try {
                 if (!(this.uri.equals(""))) {
-                    connection = DriverManager.getConnection(this.uri);
+                    connection = DriverManager.getConnection(this.uri + "?autoReconnect=true");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
