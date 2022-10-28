@@ -1,28 +1,28 @@
 package com.bisecthosting.mcordlink.listeners;
 
 import com.bisecthosting.mcordlink.MCordLink;
-import com.bisecthosting.mcordlink.database.DBConnection;
 import com.bisecthosting.mcordlink.yaml.YamlCreation;
+import com.bisecthosting.mcordlink.requests.http;
 
 import com.marcusslover.plus.lib.sound.Note;
 import com.marcusslover.plus.lib.text.Text;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class JoinListener implements Listener {
 
-    public DBConnection dbConnection = null;
     private YamlCreation yamlCreation = null;
+    private http API = null;
 
-    public JoinListener(DBConnection dbConnection, YamlCreation yamlCreation) {
-        this.dbConnection = dbConnection;
+    public JoinListener(YamlCreation yamlCreation, http API) {
         this.yamlCreation = yamlCreation;
+        this.API = API;
     }
 
     public String generate_code() {
@@ -45,24 +45,25 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) throws IOException {
         Player player = event.getPlayer();
         String name = player.getName();
         String hub_number = this.yamlCreation.getHubNumber();
-        Map<String, String> player_data = this.dbConnection.getPlayer(name);
+        Map<String, String> player_data = this.API.getPlayerByName(name);
+        player.sendMessage(player_data.toString());
         String code = player_data.get("code");
         String discord_id = player_data.get("discord_id");
         Note.of(Sound.ENTITY_EXPERIENCE_ORB_PICKUP).play(player);
         if (code == null) {
             String new_code = generate_code();
-            this.dbConnection.addPlayer(new_code, name);
+            this.API.addPlayer(new_code, player.getName());
             this.send_code(player, new_code);
             MCordLink.prompt.addPlayer(player);
         } else {
             if (discord_id == null) {
                 if (!(code.startsWith(hub_number))) {
                     code = generate_code();
-                    this.dbConnection.updateCode(code, name);
+                    this.API.updateCode(name, code);
                 }
                 this.send_code(player, code);
                 MCordLink.prompt.addPlayer(player);
@@ -72,5 +73,4 @@ public class JoinListener implements Listener {
             }
         }
     }
-
 }

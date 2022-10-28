@@ -2,13 +2,14 @@ package com.bisecthosting.mcordlink;
 
 import com.bisecthosting.mcordlink.commands.ClearDatabase;
 import com.bisecthosting.mcordlink.commands.RemovePlayer;
+import com.bisecthosting.mcordlink.commands.Test;
 import com.bisecthosting.mcordlink.discord.DiscordLauncher;
 import com.bisecthosting.mcordlink.discord.MessageListener;
 
-import com.bisecthosting.mcordlink.database.DBConnection;
 import com.bisecthosting.mcordlink.listeners.JoinListener;
 import com.bisecthosting.mcordlink.listeners.Message;
 import com.bisecthosting.mcordlink.yaml.YamlCreation;
+import com.bisecthosting.mcordlink.requests.http;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -18,7 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.Connection;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,32 +30,32 @@ public final class MCordLink extends JavaPlugin implements Listener {
     private static Message msg;
     private DiscordLauncher discordLauncher = new DiscordLauncher();
     private YamlCreation yamlCreation = new YamlCreation(this);
-    private DBConnection dbConnection = new DBConnection();
-    public Connection connection = null;
-    private MessageListener messageListener = new MessageListener(this, this.yamlCreation, this.dbConnection);
+    private MessageListener messageListener = new MessageListener(this, this.yamlCreation, this.API);
+    public http API = new http();
 
 
 
 
     @Override
     public void onEnable() {
-        prompt = Bukkit.createBossBar(ChatColor.YELLOW+"Please send the code "+ChatColor.GREEN+ChatColor.BOLD+"in chat"+ChatColor.YELLOW+" to the "+ChatColor.GREEN+"#link "+ChatColor.YELLOW+"chat.", BarColor.GREEN, BarStyle.SOLID);
+        prompt = Bukkit.createBossBar
+                (ChatColor.YELLOW+"Please send the code "+ChatColor.GREEN+ChatColor.BOLD+"in chat"+
+                        ChatColor.YELLOW+" to the "+ChatColor.GREEN+"#link "+ChatColor.YELLOW+"chat.",
+                        BarColor.GREEN, BarStyle.SOLID);
 
         Logger logger = this.getLogger();
         logger.log(Level.INFO, "Loading MCordLink...");
 
         this.yamlCreation.init();
-        dbConnection.init(logger, this.yamlCreation.getDatabaseURI(), this);
-        dbConnection.createTables();
-        this.connection = dbConnection.createConnection();
-        msg = new Message(dbConnection);
+        msg = new Message(this.API);
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(
-                new JoinListener(this.dbConnection, this.yamlCreation), this);
+                new JoinListener(this.yamlCreation, this.API), this);
         logger.log(Level.INFO, "Registered Events");
         getCommand("removeplayer").setExecutor(new RemovePlayer(this));
         getCommand("cleardatabase").setExecutor(new ClearDatabase());
+        getCommand("test").setExecutor(new Test());
 
         this.discordLauncher.init(this.yamlCreation.getBotToken());
         this.messageListener.init();
@@ -88,18 +89,16 @@ public final class MCordLink extends JavaPlugin implements Listener {
         return plugin.yamlCreation;
     }
 
-    public static DBConnection getConnection() {
-        return plugin.dbConnection;
-    }
-
     public static void init() {
         new BukkitRunnable() {
             @Override
             public void run() {
-                msg.everyMinute();
+                try {
+                    msg.everyMinute();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }.runTaskTimer(MCordLink.getPlugin(MCordLink.class), 0L, 1200L);
     }
-
-
 }

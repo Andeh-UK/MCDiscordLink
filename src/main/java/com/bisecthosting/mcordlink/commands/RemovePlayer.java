@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.Map;
 
 
@@ -41,11 +42,20 @@ public class RemovePlayer implements CommandExecutor {
         if (isPermitted) {
             String targetName = args[0];
 
-            Map<String, String> player_data = MCordLink.getPlugin().getConnection().getPlayer(targetName);
+            Map<String, String> player_data = null;
+            try {
+                player_data = MCordLink.getPlugin().API.getPlayerByName(targetName);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             if (player_data == null) {
                 sender.sendMessage("Player with tag " + targetName + " is not currently registered on the database.");
             } else {
-                MCordLink.getPlugin().getConnection().removePlayer(targetName);
+                try {
+                    MCordLink.getPlugin().API.removePlayer(targetName);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 sender.sendMessage("Successfully removed player " + targetName + " from the database.");
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user "+targetName+" permission unset ajqueue.queue.game");
             }

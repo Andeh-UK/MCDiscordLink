@@ -2,7 +2,7 @@ package com.bisecthosting.mcordlink.discord;
 
 import com.bisecthosting.mcordlink.MCordLink;
 import com.bisecthosting.mcordlink.yaml.YamlCreation;
-import com.bisecthosting.mcordlink.database.DBConnection;
+import com.bisecthosting.mcordlink.requests.http;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -14,9 +14,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -26,16 +25,16 @@ public class MessageListener extends ListenerAdapter {
 
     private MCordLink plugin;
     private YamlCreation yamlCreation;
-    private DBConnection dbConnection;
+    private http API;
     private String channelID;
     private JDA jda;
     private String unicodeWarn = "\u26A0";
     private String unicodeYes = "\u2714";
 
-    public MessageListener(MCordLink plugin, YamlCreation yaml, DBConnection dbConnection) {
+    public MessageListener(MCordLink plugin, YamlCreation yaml, http API) {
         this.plugin = plugin;
         this.yamlCreation = yaml;
-        this.dbConnection = dbConnection;
+        this.API = API;
     }
 
     public void init() {
@@ -88,7 +87,12 @@ public class MessageListener extends ListenerAdapter {
                 message.delete().queue();
                 return;
             }
-            Map<String, String> player_data = this.dbConnection.getPlayerByCode(msg);
+            Map<String, String> player_data = null;
+            try {
+                player_data = this.API.getPlayerByCode(msg);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             String minecraft_name = player_data.get("minecraft_name");
             if (minecraft_name == null) {
                 message.addReaction(Emoji.fromUnicode(this.unicodeWarn)).queue();
@@ -97,7 +101,11 @@ public class MessageListener extends ListenerAdapter {
                 Guild guild = event.getGuild();
                 Role role = guild.getRoleById(role_id);
                 guild.addRoleToMember(user, role).queue();
-                this.dbConnection.attachDiscord(msg, event.getAuthor().getId());
+                try {
+                    this.API.attachDiscord(minecraft_name, event.getAuthor().getId());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 List reactions = message.getReactions();
                 if (reactions.toArray().length == 0) {
                     message.addReaction(Emoji.fromUnicode(this.unicodeYes)).queue();
@@ -105,7 +113,7 @@ public class MessageListener extends ListenerAdapter {
                 Player player = this.plugin.getServer().getPlayer(minecraft_name);
                 assert player != null;
                 player.sendMessage(ChatColor.AQUA+"Connected to Discord User "+ChatColor.YELLOW+ user.getName() + "#" + user.getDiscriminator());
-//                QueueFunction.addQueue(player);
+                //QueueFunction.addQueue(player);
                 MCordLink.prompt.removePlayer(player);
                 try {
                     boolean success = Bukkit.getScheduler().callSyncMethod( plugin, new Callable<Boolean>() {
@@ -119,8 +127,6 @@ public class MessageListener extends ListenerAdapter {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-
-
             }
         }
     }

@@ -20,3 +20,6 @@ commands:
     aliases:
       - cleardb
       - dbclear
+  test:
+    description: Testing the API
+    usage: /<command>

@@ -1,21 +1,22 @@
 package com.bisecthosting.mcordlink.listeners;
 
-import com.bisecthosting.mcordlink.database.DBConnection;
+import com.bisecthosting.mcordlink.requests.http;
 import com.marcusslover.plus.lib.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class Message {
 
-    private DBConnection dbConnection = null;
+    private http API = null;
 
-    public Message(DBConnection dbConnection) {
-        this.dbConnection = dbConnection;
+    public Message(http API) {
+        this.API = API;
     }
 
-    public void everyMinute() {
+    public void everyMinute() throws IOException {
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             String code = getCode(p);
@@ -30,13 +31,13 @@ public class Message {
         }
     }
 
-    public String getCode(Player player) {
-        Map<String, String> player_data = this.dbConnection.getPlayer(player.getName());
+    public String getCode(Player player) throws IOException {
+        Map<String, String> player_data = this.API.getPlayerByName(player.getName());
         return player_data.get("code");
     }
 
-    public boolean hasLinked(Player player) {
-        Map<String, String> player_data = this.dbConnection.getPlayer(player.getName());
+    public boolean hasLinked(Player player) throws IOException {
+        Map<String, String> player_data = this.API.getPlayerByName(player.getName());
         String discord_id = player_data.get("discord_id");
         return discord_id != null;
     }
