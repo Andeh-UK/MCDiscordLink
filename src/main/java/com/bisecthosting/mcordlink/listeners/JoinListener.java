@@ -2,7 +2,7 @@ package com.bisecthosting.mcordlink.listeners;
 
 import com.bisecthosting.mcordlink.MCordLink;
 import com.bisecthosting.mcordlink.yaml.YamlCreation;
-import com.bisecthosting.mcordlink.requests.http;
+import com.bisecthosting.mcordlink.requests.HTTP;
 
 import com.marcusslover.plus.lib.sound.Note;
 import com.marcusslover.plus.lib.text.Text;
@@ -18,9 +18,9 @@ import java.util.Map;
 public class JoinListener implements Listener {
 
     private YamlCreation yamlCreation = null;
-    private http API = null;
+    private HTTP API = null;
 
-    public JoinListener(YamlCreation yamlCreation, http API) {
+    public JoinListener(YamlCreation yamlCreation, HTTP API) {
         this.yamlCreation = yamlCreation;
         this.API = API;
     }

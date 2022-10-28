@@ -2,7 +2,7 @@ package com.bisecthosting.mcordlink.discord;
 
 import com.bisecthosting.mcordlink.MCordLink;
 import com.bisecthosting.mcordlink.yaml.YamlCreation;
-import com.bisecthosting.mcordlink.requests.http;
+import com.bisecthosting.mcordlink.requests.HTTP;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -25,13 +25,13 @@ public class MessageListener extends ListenerAdapter {
 
     private MCordLink plugin;
     private YamlCreation yamlCreation;
-    private http API;
+    private HTTP API;
     private String channelID;
     private JDA jda;
     private String unicodeWarn = "\u26A0";
     private String unicodeYes = "\u2714";
 
-    public MessageListener(MCordLink plugin, YamlCreation yaml, http API) {
+    public MessageListener(MCordLink plugin, YamlCreation yaml, HTTP API) {
         this.plugin = plugin;
         this.yamlCreation = yaml;
         this.API = API;

@@ -9,7 +9,7 @@ import com.bisecthosting.mcordlink.discord.MessageListener;
 import com.bisecthosting.mcordlink.listeners.JoinListener;
 import com.bisecthosting.mcordlink.listeners.Message;
 import com.bisecthosting.mcordlink.yaml.YamlCreation;
-import com.bisecthosting.mcordlink.requests.http;
+import com.bisecthosting.mcordlink.requests.HTTP;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -31,7 +31,7 @@ public final class MCordLink extends JavaPlugin implements Listener {
     private DiscordLauncher discordLauncher = new DiscordLauncher();
     private YamlCreation yamlCreation = new YamlCreation(this);
     private MessageListener messageListener = new MessageListener(this, this.yamlCreation, this.API);
-    public http API = new http();
+    public HTTP API = new HTTP();
 
 
 

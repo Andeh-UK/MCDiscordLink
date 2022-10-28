@@ -1,7 +1,5 @@
 package com.bisecthosting.mcordlink.requests;
 
-import com.bisecthosting.mcordlink.requests.ParameterStringBuilder;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.google.common.base.Splitter;
 
-public class http {
+public class HTTP {
 
     private HttpURLConnection makeConnection(String url_string, String method) throws IOException {
         URL url = new URL(url_string);
