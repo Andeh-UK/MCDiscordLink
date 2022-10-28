@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.google.common.base.Splitter;
 
-public class HTTP {
+public class Http {
 
     private HttpURLConnection makeConnection(String url_string, String method) throws IOException {
         URL url = new URL(url_string);

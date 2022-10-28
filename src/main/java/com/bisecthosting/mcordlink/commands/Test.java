@@ -1,6 +1,6 @@
 package com.bisecthosting.mcordlink.commands;
 
-import com.bisecthosting.mcordlink.requests.HTTP;
+import com.bisecthosting.mcordlink.requests.Http;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +12,7 @@ public class Test implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String status;
-        HTTP API = new HTTP();
+        Http API = new Http();
         try {
             status = API.getPlayers();
         } catch (IOException e) {

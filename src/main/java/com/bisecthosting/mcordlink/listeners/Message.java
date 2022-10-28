@@ -1,6 +1,6 @@
 package com.bisecthosting.mcordlink.listeners;
 
-import com.bisecthosting.mcordlink.requests.HTTP;
+import com.bisecthosting.mcordlink.requests.Http;
 import com.marcusslover.plus.lib.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class Message {
 
-    private HTTP API = null;
+    private Http API = null;
 
-    public Message(HTTP API) {
+    public Message(Http API) {
         this.API = API;
     }
 
