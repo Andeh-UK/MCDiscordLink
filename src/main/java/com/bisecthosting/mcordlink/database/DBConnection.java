@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons
 
 public class DBConnection {
 
@@ -24,10 +23,12 @@ public class DBConnection {
 
     public Connection createConnection() {
         Connection connection = null;
+
         if (this.uri != null) {
             try {
                 if (!(this.uri.equals(""))) {
-                    connection = DriverManager.getConnection(this.uri + "?autoReconnect=true");
+                    this.logger.log(Level.INFO, this.uri);
+                    connection = DriverManager.getConnection(this.uri);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

@@ -93,10 +93,6 @@ public class MessageListener extends ListenerAdapter {
             if (minecraft_name == null) {
                 message.addReaction(Emoji.fromUnicode(this.unicodeWarn)).queue();
             } else {
-                String role_id = this.yamlCreation.getRoleID();
-                Guild guild = event.getGuild();
-                Role role = guild.getRoleById(role_id);
-                guild.addRoleToMember(user, role).queue();
                 this.dbConnection.attachDiscord(msg, event.getAuthor().getId());
                 List reactions = message.getReactions();
                 if (reactions.toArray().length == 0) {
